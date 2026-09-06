@@ -21,10 +21,16 @@ const App = () => {
         </NavLink>
 
         <nav className="main-nav" aria-label="Main navigation">
-          <NavLink className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'} to="/all-posts">
+          <NavLink 
+            className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'} 
+            to="/all-posts"
+          >
             All Posts
           </NavLink>
-          <NavLink className={({ isActive }) => isActive ? 'nav-link active create-link' : 'nav-link create-link'} to="/create-post">
+          <NavLink 
+            className={({ isActive }) => isActive ? 'nav-link active create-link' : 'nav-link create-link'} 
+            to="/create-post"
+          >
             <span>+</span> Create Post
           </NavLink>
         </nav>

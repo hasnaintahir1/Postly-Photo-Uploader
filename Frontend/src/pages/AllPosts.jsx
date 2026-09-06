@@ -3,14 +3,20 @@ import axios from 'axios';
 
 const AllPosts = () => {
   const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [deleting, setDeleting] = useState(false);
   const [showDeletePopup, setShowDeletePopup] = useState(false);
   const [postToDelete, setPostToDelete] = useState(null);
 
   const handleDeletePost = () => {
+    setDeleting(true);
     axios.delete(`${import.meta.env.VITE_API_URL}/posts/${postToDelete}`)
       .then(() => {
         setPosts(posts.filter((post) => post._id !== postToDelete));
         setShowDeletePopup(false);
+      })
+      .finally(() => {
+        setDeleting(false);
       })
   }
 
@@ -18,6 +24,9 @@ const AllPosts = () => {
     axios.get(`${import.meta.env.VITE_API_URL}/posts`)
       .then((res) => {
         setPosts(res.data.posts)
+      })
+      .finally(() => {
+        setLoading(false)
       })
   }, []);
 
@@ -32,7 +41,12 @@ const AllPosts = () => {
         <span className="post-count">{posts.length} posts</span>
       </div>
 
-      {posts.length === 0 ? (
+      {loading ? (
+        <div className="loader-container">
+          <div className="loader"></div>
+          <p>Loading posts...</p>
+        </div>
+      ) : posts.length === 0 ? (
         <div className="empty-posts">
           <div className="empty-posts-icon">✦</div>
           <h2>You have no posts yet</h2>
@@ -71,18 +85,28 @@ const AllPosts = () => {
           <div className="delete-popup">
             <h2>Delete post?</h2>
             <p>You want to delete this post?</p>
+            {deleting && (
+              <div className="delete-loader">
+                <div className="loader"></div>
+                <p>Deleting post...</p>
+              </div>
+            )}
             <div className="delete-popup-buttons">
               <button
                 className="cancel-button"
                 type="button"
+                disabled={deleting}
                 onClick={() => setShowDeletePopup(false)}
               >
                 Cancel
               </button>
-              <button className="confirm-delete-button" type="button"
+              <button
+                className="confirm-delete-button"
+                type="button"
+                disabled={deleting}
                 onClick={handleDeletePost}
               >
-                Delete
+                {deleting ? 'Deleting...' : 'Delete'}
               </button>
             </div>
           </div>
