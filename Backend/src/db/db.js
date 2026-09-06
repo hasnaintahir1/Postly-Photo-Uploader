@@ -1,24 +1,16 @@
 const mongoose = require('mongoose');
 
-// async function connectDB(){
-//     await mongoose.connect(process.env.MONGODB_URI);
-
-//     console.log('MongoDB connected');
-// };
-
 let isConnected = false;
 
 async function connectDB() {
+    if (isConnected) return;
     try {
-        await mongoose.connect(process.env.MONGODB_URI, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-        });
+        await mongoose.connect(process.env.MONGODB_URI);
         isConnected = true;
-        console.log('MongoDB connected');
+        console.log('MongoDB connected successfully');
     } catch (error) {
         console.error('Error connecting to MongoDB:', error);
     }
 }
 
-module.exports = connectDB;
+module.exports = { connectDB, getIsConnected: () => isConnected };
